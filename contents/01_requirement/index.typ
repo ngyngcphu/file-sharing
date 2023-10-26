@@ -28,6 +28,7 @@
         - *ls fname*: Liệt kê địa chỉ IP của tất cả client chứa file _fname_ trong hệ thống file-sharing.
         - *store*: Liệt kê metadata của tất cả file hiện đang được lưu trên server.
     ]
+    4. Nhiều client có thể tải xuống các file khác nhau từ một client _"mục tiêu"_ tại cùng một thời điểm. Điều này yêu cầu ứng dụng client phải hỗ trợ đa luồng để xử lý việc tải nhiều file cùng một lúc mà không gây xung đột hoặc trì hoãn.
 ]
 
 #pagebreak()

@@ -39,4 +39,3 @@
 #show par: set block(spacing: 2em)
 
 #include "contents/index.typ"
-#include "referrences.typ"
