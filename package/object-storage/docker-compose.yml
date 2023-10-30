@@ -1,0 +1,32 @@
+version: "3.5"
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: fileP2P-minio
+    volumes:
+      - data:/data
+    ports:
+      - 9000:9000
+      - 9090:9090
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9090"
+    restart: always
+
+  fastify:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: ghcr.io/phucvinh57/fastify-template:0.1.0
+    container_name: fastify_template
+    ports:
+      - 8080:8080
+    volumes:
+      - .env:/app/.env
+    depends_on:
+      - postgres
+    restart: always
+  
+volumes:
+  data:
