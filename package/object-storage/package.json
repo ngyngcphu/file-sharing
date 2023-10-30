@@ -8,14 +8,12 @@
     "build": "tsc --project tsconfig.compile.json && tsc-alias",
     "barrels": "barrelsby --config .barrelsby.json -q",
     "start": "yarn barrels && cross-env NODE_ENV=development tsnd --ignore-watch node_modules --respawn --transpile-only --max-old-space-size=2048 -r tsconfig-paths/register src/index.ts",
-    "test": "cross-env NODE_ENV=test jest --passWithNoTests",
     "bootstrap": "yarn start:docker && yarn",
     "start:docker": "docker compose -f docker-compose.dev.yml up -d",
     "clean:docker": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "clean:git": "git branch --merged >/tmp/merged-branches && nano /tmp/merged-branches && xargs git branch -D </tmp/merged-branches && git fetch --prune --all"
   },
   "dependencies": {
-    "@fastify/cookie": "^9.0.4",
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.0.0",
     "@fastify/sensible": "^5.2.0",

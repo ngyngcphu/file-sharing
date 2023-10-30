@@ -22,9 +22,6 @@ export const loggerConfig: Record<NodeEnv, PinoLoggerOptions> = {
         },
         serializers: { err: errorSerialize }
     },
-    test: {
-        serializers: { err: errorSerialize }
-    },
     // In production, save log to files.
     // Can write a plugin to use centralize logging services, if need
     production: {

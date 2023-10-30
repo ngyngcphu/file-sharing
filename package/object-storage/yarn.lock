@@ -45,14 +45,6 @@
     ajv-formats "^2.1.1"
     fast-uri "^2.0.0"
 
-"@fastify/cookie@^9.0.4":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@fastify/cookie/-/cookie-9.1.0.tgz#b9ca95fcb934a21915ab6f228a63dd73013738df"
-  integrity sha512-w/LlQjj7cmYlQNhEKNm4jQoLkFXCL73kFu1Jy3aL7IFbYEojEKur0f7ieCKUxBBaU65tpaWC83UM8xW7AzY6uw==
-  dependencies:
-    cookie "^0.5.0"
-    fastify-plugin "^4.0.0"
-
 "@fastify/cors@^8.3.0":
   version "8.4.1"
   resolved "https://registry.yarnpkg.com/@fastify/cors/-/cors-8.4.1.tgz#bd8fece8e175a20059a4c6552f0e7de9e94eafa0"
