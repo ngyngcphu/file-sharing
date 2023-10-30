@@ -7,10 +7,7 @@
     "start": "yarn barrels && cross-env NODE_ENV=development vite --host",
     "build": "tsc && cross-env NODE_ENV=production vite build",
     "preview": "vite preview --host",
-    "barrels": "barrelsby --config .barrelsby.json -q",
-    "lint": "eslint '**/*.{tsx,ts,js}'",
-    "format": "prettier '**/*.{tsx,ts,js,json,md,yml,yaml}' --write",
-    "prepare": "husky install"
+    "barrels": "barrelsby --config .barrelsby.json -q"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
