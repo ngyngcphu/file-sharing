@@ -3,13 +3,14 @@ import { CORS_WHITE_LIST, customErrorHandler, envs, loggerConfig, swaggerConfig,
 import { apiPlugin } from './routes';
 
 export function createServer(config: ServerConfig): FastifyInstance {
-    const app = fastify({ logger: loggerConfig[envs.NODE_ENV] });
+    const app = fastify({ logger: loggerConfig[envs.NODE_ENV], ajv: { plugins: [require('@fastify/multipart').ajvFilePlugin] } });
 
     app.register(import('@fastify/sensible'));
     app.register(import('@fastify/helmet'));
     app.register(import('@fastify/cors'), {
         origin: CORS_WHITE_LIST
     });
+    app.register(import('@fastify/multipart'), { attachFieldsToBody: true });
 
     // Swagger on production will be turned off in the future
     if (envs.isDev) {

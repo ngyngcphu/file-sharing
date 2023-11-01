@@ -16,6 +16,7 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@fastify/helmet": "^11.0.0",
+    "@fastify/multipart": "^8.0.0",
     "@fastify/sensible": "^5.2.0",
     "@fastify/swagger": "^8.8.0",
     "@fastify/swagger-ui": "^1.9.3",

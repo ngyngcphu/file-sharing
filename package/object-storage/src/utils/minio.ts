@@ -7,7 +7,8 @@ const uploadFileToLocalRepo = async (fileName: string, fileBuffer: Buffer) => {
         throw new Error("Bucket doesn't exist");
     }
     try {
-        await minioClient.putObject(envs.MINIO_BUCKET_NAME, fileName, fileBuffer);
+        const objectInfo = await minioClient.putObject(envs.MINIO_BUCKET_NAME, fileName, fileBuffer);
+        if (objectInfo.versionId) return 'File is uploaded successfully !';
     } catch (error) {
         throw new Error(`Error upload file to Local Repository: ${error.message}`);
     }
