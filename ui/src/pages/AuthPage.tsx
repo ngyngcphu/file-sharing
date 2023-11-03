@@ -3,18 +3,17 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Card, Input, Button, Typography } from '@material-tailwind/react';
 import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline';
-import { useSessionStore } from '@states';
+import { authService } from '@services';
 import { useUserStore } from '@states';
 
 export function AuthPage() {
   const navigate: NavigateFunction = useNavigate();
   const { register, handleSubmit } = useForm<LoginPayload>();
   const { getUserData } = useUserStore();
-  const { login } = useSessionStore();
 
   const submit = async (data: LoginPayload) => {
     try {
-      await login(data);
+      await authService.login(data);
       await getUserData();
       navigate('/home');
     } catch (err) {

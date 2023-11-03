@@ -3,7 +3,10 @@ import { userService } from '@services';
 
 export const useUserStore = create<UserStore>()((set) => ({
   userStatus: 'UNINIT',
-  userData: { id: '' },
+  userData: {
+    userId: '',
+    sessionId: ''
+  },
   getUserData: async () => {
     set(() => ({ userStatus: 'PENDING' }));
     try {

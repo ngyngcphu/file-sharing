@@ -1,19 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
-import { useFileStore } from "@states";
+import { useUserStore, useFileStore } from "@states";
 
 export function HomePage() {
-    const [fname, setFname] = useState<string>('');
-    const { uploadFile } = useFileStore();
+    const [key, setKey] = useState<number>(0);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { userData } = useUserStore();
+    const {
+        localStatus,
+        fileMetadata,
+        uploadFileDataToLocalRepo,
+        uploadFileMetadataToServer
+    } = useFileStore();
 
-    const handleUploadDocument = useMemo(
-        () => async (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (event.target.files) {
-                await uploadFile(event.target.files[0], fname);
-            }
-        },
-        [uploadFile]
-    );
+    useEffect(() => {
+        if (localStatus === 'SUCCESS') {
+            const { sessionId } = userData;
+            uploadFileMetadataToServer({
+                ...fileMetadata,
+                sessionId
+            });
+        }
+    }, [fileMetadata, userData.sessionId, localStatus]);
 
     const commands = {
         publish: async (fname: string) => {
@@ -22,14 +30,20 @@ export function HomePage() {
             }
             const word = fname.trim().split(' ');
             if (word.length === 1) {
-                setFname(fname);
                 return (
                     <div>
                         <label htmlFor='dropzone-file'>Select a file:</label>
                         <input
+                            key={key}
+                            ref={fileInputRef}
                             type='file'
                             id='dropzone-file'
-                            onChange={handleUploadDocument}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                if (event.target.files) {
+                                    setKey((prevKey) => prevKey + 1);
+                                    uploadFileDataToLocalRepo(event.target.files[0], fname);
+                                }
+                            }}
                         ></input>
                     </div>
                 );

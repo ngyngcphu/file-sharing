@@ -9,7 +9,7 @@ import {
 
 export const validateMultipartFile = async (file: MultipartFile) => {
     try {
-        const fileExtension = file.fieldname.split('.').pop()?.toLowerCase();
+        const fileExtension = file.filename.split('.').pop()?.toLowerCase();
         if (!fileExtension || FILE_EXTENSION_EXCLUDE.includes(`.${fileExtension}`)) {
             return { error: NOT_ACCEPT_VIDEO };
         }
