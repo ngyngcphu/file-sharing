@@ -1,5 +1,5 @@
 type UserStore = {
   userStatus: StoreStatus;
-  userData: string[];
+  userData: { id: string };
   getUserData: () => Promise<void>;
 };

@@ -1,4 +1,5 @@
 import { Type } from '@sinclair/typebox';
+import { FileDto } from '@dtos/out';
 import { minioHandler } from '@handlers';
 import { createRoutes } from '@utils';
 
@@ -7,9 +8,9 @@ export const uploadFilePlugin = createRoutes('File', [
         method: 'POST',
         url: '/:fname',
         schema: {
-            params: { fname: Type.String() } ,
+            params: { fname: Type.String() },
             response: {
-                200: Type.String()
+                200: FileDto
             }
         },
         handler: minioHandler.uploadFile

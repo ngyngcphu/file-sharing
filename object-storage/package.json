@@ -14,6 +14,7 @@
     "clean:git": "git branch --merged >/tmp/merged-branches && nano /tmp/merged-branches && xargs git branch -D </tmp/merged-branches && git fetch --prune --all"
   },
   "dependencies": {
+    "@fastify/cors": "^8.4.1",
     "@fastify/helmet": "^11.0.0",
     "@fastify/multipart": "^8.0.0",
     "@fastify/sensible": "^5.2.0",

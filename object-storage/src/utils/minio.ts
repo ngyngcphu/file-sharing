@@ -9,7 +9,10 @@ const uploadFileToLocalRepo = async (fileName: string, fileBuffer: Buffer) => {
     }
     try {
         const objectInfo = await minioClient.putObject(envs.MINIO_BUCKET_NAME, fileName, fileBuffer);
-        if (objectInfo.versionId) return 'File is uploaded successfully !';
+        return {
+            etag: objectInfo.etag,
+            versionId: objectInfo.versionId
+        }
     } catch (error) {
         throw new Error(`Error upload file to Local Repository: ${error.message}`);
     }

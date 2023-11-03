@@ -3,6 +3,5 @@
  */
 
 export * from './auth';
-export * from './navigationBar';
-export * from './projectGeneral';
+export * from './file';
 export * from './user';

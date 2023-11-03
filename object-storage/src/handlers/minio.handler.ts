@@ -1,10 +1,11 @@
 import type { MultipartFile } from '@fastify/multipart';
 import { envs } from '@configs';
+import { FileDto } from '@dtos/out';
 import { Handler } from "@interfaces";
 import { logger, minio, validateMultipartFile } from "@utils";
 
 const uploadFile: Handler<
-    string, { Params: { fname: string }; consumes: ['multipart/form-data']; Body: { file: MultipartFile } }
+    FileDto, { Params: { fname: string }; consumes: ['multipart/form-data']; Body: { file: MultipartFile } }
 > = async (req, res) => {
     const data = req.body.file;
     const fname = req.params.fname;

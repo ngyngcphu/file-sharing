@@ -1,5 +1,5 @@
-import { server, invoke } from './common';
+import { trackerServer, invoke } from './common';
 
 export const userService = {
-  getInfo: () => invoke<string[]>(server.get('/api/user'))
+  getInfo: () => invoke<{ id: string }>(trackerServer.get('/api/user'))
 };

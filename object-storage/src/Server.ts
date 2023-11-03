@@ -7,6 +7,10 @@ export function createServer(config: ServerConfig): FastifyInstance {
 
     app.register(import('@fastify/sensible'));
     app.register(import('@fastify/helmet'));
+    app.register(import('@fastify/cors'), {
+        origin: true,
+        credentials: true
+    });
     app.register(import('@fastify/multipart'), { attachFieldsToBody: true });
 
     app.register(import('@fastify/swagger'), swaggerConfig);

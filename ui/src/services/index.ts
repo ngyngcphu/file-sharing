@@ -4,5 +4,5 @@
 
 export * from './auth';
 export * from './common';
-export * from './projectGeneral';
+export * from './file';
 export * from './user';
