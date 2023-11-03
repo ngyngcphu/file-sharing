@@ -8,12 +8,9 @@ export const envs = cleanEnv(process.env, {
         devDefault: 'development',
         choices: ['development', 'production']
     }),
-    CORS_WHITE_LIST: str(),
     MINIO_ACCESS_KEY: str(),
     MINIO_SECRET_KEY: str(),
     MINIO_ENDPOINT: str({ devDefault: 'localhost' }),
     MINIO_PORT: num({ devDefault: 9000 }),
     MINIO_BUCKET_NAME: str()
 });
-
-export const CORS_WHITE_LIST = envs.CORS_WHITE_LIST.split(',');

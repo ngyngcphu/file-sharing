@@ -13,5 +13,16 @@ export const uploadFilePlugin = createRoutes('File', [
             }
         },
         handler: minioHandler.uploadFile
+    },
+    {
+        method: 'GET',
+        url: '/:fname',
+        schema: {
+            params: { fname: Type.String() },
+            response: {
+                200: Type.String()
+            }
+        },
+        handler: minioHandler.getURLFile
     }
 ]);

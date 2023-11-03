@@ -1,3 +1,4 @@
+import { BucketItemStat } from 'minio';
 import { minioClient } from '@repositories';
 import { envs } from '@configs';
 
@@ -57,6 +58,19 @@ const getFileFromLocalRepo = async (fileName: string): Promise<Buffer> => {
     }
 };
 
+const statObjectOfLocalRepo = async (fileName: string): Promise<BucketItemStat> => {
+    const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
+    if (!bucketExists) {
+        throw new Error("Bucket doesn't exist");
+    }
+    try {
+        const stat = minioClient.statObject(envs.MINIO_BUCKET_NAME, fileName);
+        return stat;
+    } catch (error) {
+        throw new Error(`Does not exist object in bucket: ${error.message}`);
+    }
+}
+
 // const isObjectExistInMinio = async (bucketName: string, objectName: string) => {
 //     try {
 //         await minioClient.statObject(bucketName, objectName);
@@ -67,4 +81,4 @@ const getFileFromLocalRepo = async (fileName: string): Promise<Buffer> => {
 //     }
 // };
 
-export const minio = { uploadFileToLocalRepo, getFileFromLocalRepo };
+export const minio = { uploadFileToLocalRepo, getFileFromLocalRepo, statObjectOfLocalRepo };
