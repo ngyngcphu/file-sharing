@@ -1,6 +1,6 @@
 import { server, invoke } from './common';
 
 export const authService = {
-  login: (data: LoginFormData) => invoke(server.post('/auth/login', data)),
-  logout: () => invoke(server.post('/auth/logout'))
+  login: (payload: LoginPayload) => invoke<LoginResult>(server.post('/auth/login', payload)),
+  logout: (payload: LogoutPayload) => invoke<string>(server.post('/auth/logout', payload))
 };

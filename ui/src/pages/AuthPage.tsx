@@ -1,25 +1,28 @@
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Card, Input, Button, Typography } from '@material-tailwind/react';
 import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline';
-import { authService } from '@services';
+import { useSessionStore } from '@states';
 import { useUserStore } from '@states';
 
 export function AuthPage() {
-  const { register, handleSubmit } = useForm<LoginFormData>();
-
+  const navigate: NavigateFunction = useNavigate();
+  const { register, handleSubmit } = useForm<LoginPayload>();
   const { getUserData } = useUserStore();
+  const { login } = useSessionStore();
 
-  const submit = (data: LoginFormData) => {
-    authService
-      .login(data)
-      .then(() => {
-        getUserData();
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+  const submit = async (data: LoginPayload) => {
+    try {
+      await login(data);
+      await getUserData();
+      navigate('/home');
+    } catch (err) {
+      const errorMessage = (err as ResponseError).message;
+      toast.error(errorMessage);
+    }
   };
+
 
   return (
     <Card color='transparent' shadow={false}>
@@ -34,13 +37,12 @@ export function AuthPage() {
           <Input
             id='auth-email'
             size='lg'
-            label='Email'
+            label='Username'
             icon={<EnvelopeIcon />}
-            {...register('email', {
+            {...register('username', {
               required: true,
               minLength: 5
             })}
-            type='email'
             crossOrigin=''
           />
           <Input
