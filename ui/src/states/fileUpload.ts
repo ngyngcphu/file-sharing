@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { fileService } from '@services';
+import { fileUploadService } from '@services';
 
-export const useFileStore = create<FileStore>()((set) => ({
+export const useFileUploadStore = create<FileUploadStore>()((set) => ({
     localStatus: 'UNINIT',
     serverStatus: 'UNINIT',
     fileMetadata: {
@@ -13,7 +13,7 @@ export const useFileStore = create<FileStore>()((set) => ({
     uploadFileDataToLocalRepo: async (file, fname) => {
         set(() => ({ localStatus: 'PENDING' }));
         try {
-            const fileMetadata = await fileService.uploadToLocalRepo(file, fname);
+            const fileMetadata = await fileUploadService.uploadToLocalRepo(file, fname);
             set(() => ({ fileMetadata: fileMetadata, localStatus: 'SUCCESS' }));
         } catch (err) {
             set(() => ({ localStatus: 'REJECT' }));
@@ -22,7 +22,7 @@ export const useFileStore = create<FileStore>()((set) => ({
     uploadFileMetadataToServer: async (payload) => {
         set(() => ({ serverStatus: 'PENDING' }));
         try {
-            const data = await fileService.uploadToServer(payload);
+            const data = await fileUploadService.uploadToServer(payload);
             set(() => ({ fileIdFromServer: data.fileId, serverStatus: 'SUCCESS' }));
         } catch (err) {
             set(() => ({ serverStatus: 'REJECT' }));

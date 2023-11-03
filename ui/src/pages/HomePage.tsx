@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
-import { useUserStore, useFileStore } from "@states";
+import { useUserStore, useFileUploadStore, useFileFetchStore } from "@states";
 
 export function HomePage() {
     const [key, setKey] = useState<number>(0);
@@ -11,7 +11,9 @@ export function HomePage() {
         fileMetadata,
         uploadFileDataToLocalRepo,
         uploadFileMetadataToServer
-    } = useFileStore();
+    } = useFileUploadStore();
+
+    const { listHostNames, fetchHostNames } = useFileFetchStore();
 
     useEffect(() => {
         if (localStatus === 'SUCCESS') {
@@ -49,6 +51,24 @@ export function HomePage() {
                 );
             } else {
                 return "Invalid 'publish' command. Please use 'publish <fname>' to select a file.";
+            }
+        },
+        ls: async (fname: string) => {
+            if (fname.trim() === '') {
+                return "Please provide <fname> after 'ls'"
+            }
+            const word = fname.trim().split(' ');
+            if (word.length === 1) {
+                const listHostNames = await fetchHostNames(fname);
+                return (
+                    <div>
+                        {listHostNames.map((hostName, index) => (
+                            <p key={index}>{hostName}</p>
+                        ))}
+                    </div>
+                )
+            } else {
+                return "Invalid 'ls' command. Please use 'ls <fname>' to list all of hostnames containing fname.";
             }
         }
     }

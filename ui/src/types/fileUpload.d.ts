@@ -6,7 +6,7 @@ type FileMetadata = {
 
 type SessionFileMetadata = FileMetadata & { sessionId: string };
 
-type FileStore = {
+type FileUploadStore = {
     localStatus: StoreStatus;
     serverStatus: StoreStatus;
     fileMetadata: FileMetadata;

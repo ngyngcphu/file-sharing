@@ -1,6 +1,6 @@
 import { localRepoServer, trackerServer, invoke } from '@services';
 
-export const fileService = {
+export const fileUploadService = {
     uploadToLocalRepo: (file: File, fname: string) => {
         const formData = new FormData();
         formData.append('file', file);
