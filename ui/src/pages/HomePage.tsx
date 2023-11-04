@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
 import { useUserStore, useFileUploadStore, useFileFetchStore } from "@states";
@@ -13,7 +14,7 @@ export function HomePage() {
         uploadFileMetadataToServer
     } = useFileUploadStore();
 
-    const { listHostNames, fetchHostNames } = useFileFetchStore();
+    const { fetchHostNames } = useFileFetchStore();
 
     useEffect(() => {
         if (localStatus === 'SUCCESS') {
@@ -69,6 +70,34 @@ export function HomePage() {
                 )
             } else {
                 return "Invalid 'ls' command. Please use 'ls <fname>' to list all of hostnames containing fname.";
+            }
+        },
+        fetch: async (fnameAndHostname: string) => {
+            const [fname, hostname] = fnameAndHostname.split(' ');
+
+            if (!fname || !hostname) {
+                return "Please provide both <fname> and <hostname> separated by a space after 'fetch'";
+            }
+            const listHostNames = await fetchHostNames(fname);
+            if (!listHostNames.includes(hostname)) {
+                return `Hostname '${hostname}' not found for '${fname}'.`;
+            }
+            try {
+                const response = await axios.get(`http://${hostname}:8080/api/file/${fname}`);
+                const fileData = await axios({
+                    method: 'get',
+                    url: response.data,
+                    responseType: 'blob'
+                });
+                console.log(fileData.data)
+                try {
+                    await uploadFileDataToLocalRepo(fileData.data, fname);
+                    return 'Fetch operation completed';
+                } catch (err) {
+                    return 'Fetch operation failed';
+                }
+            } catch (err) {
+                return 'Error saving the file';
             }
         }
     }

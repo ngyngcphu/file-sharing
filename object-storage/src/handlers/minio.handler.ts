@@ -1,5 +1,4 @@
 import type { MultipartFile } from '@fastify/multipart';
-import { envs } from '@configs';
 import { FileDto } from '@dtos/out';
 import { Handler } from "@interfaces";
 import { logger, minio, validateMultipartFile } from "@utils";
@@ -30,7 +29,7 @@ const getURLFile: Handler<string, { Params: { fname: string } }> = async (req, r
     }
 
     try {
-        const fileURL = `${req.ip}:${envs.MINIO_PORT}/${envs.MINIO_BUCKET_NAME}/${fname}`;
+        const fileURL = await minio.createPresignedGetFile(fname);
         return res.status(200).send(fileURL);
     } catch (err) {
         logger.error(err);
