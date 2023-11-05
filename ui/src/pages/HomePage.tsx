@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
-import { fileUploadService } from "@services";
-import { useUserStore, useFileUploadStore, useFileFetchStore } from "@states";
+import { fileUploadService, fileFetchService } from "@services";
+import { useUserStore, useFileUploadStore } from "@states";
 
 export function HomePage() {
     const [key, setKey] = useState<number>(0);
@@ -14,8 +14,6 @@ export function HomePage() {
         uploadFileDataToLocalRepo,
         uploadFileMetadataToServer
     } = useFileUploadStore();
-
-    const { fetchHostNames } = useFileFetchStore();
 
     useEffect(() => {
         const handleListFileMetadata = async () => {
@@ -82,7 +80,7 @@ export function HomePage() {
             const word = fname.trim().split(' ');
             if (word.length === 1) {
                 try {
-                    const listHostNames = await fetchHostNames(fname);
+                    const listHostNames = await fileFetchService.listHostName(fname);
                     return (
                         <div>
                             {listHostNames.map((hostName, index) => (
@@ -103,7 +101,7 @@ export function HomePage() {
             if (!fname || !hostname) {
                 return "Please provide both <fname> and <hostname> separated by a space after 'fetch'";
             }
-            const listHostNames = await fetchHostNames(fname);
+            const listHostNames = await fileFetchService.listHostName(fname);
             if (!listHostNames.includes(hostname)) {
                 return `Hostname '${hostname}' not found for '${fname}'.`;
             }

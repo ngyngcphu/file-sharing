@@ -35,7 +35,6 @@
             "@configs/*": ["src/configs/*"],
             "@repositories": ["src/repositories"],
             "@utils": ["src/utils"],
-            "@hooks": ["src/hooks"],
             "@routes": ["src/routes"],
             "@interfaces": ["src/interfaces"],
             "#package.json": ["./package.json"]
