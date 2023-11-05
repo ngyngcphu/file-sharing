@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -9,7 +9,7 @@ import { useUserStore } from '@states';
 
 export function AuthPage() {
   const navigate: NavigateFunction = useNavigate();
-  const { getUserData } = useUserStore();
+  const { getUserData, userData } = useUserStore();
   const [isSignup, setIsSignup] = useState<boolean>(false);
 
   if (isSignup === false) {

@@ -13,5 +13,9 @@ export const fileUploadService = {
         );
     },
     uploadToServer: (payload: SessionFileMetadata) => 
-        invoke<{ fileId: string }>(trackerServer.post('/api/file', payload))
+        invoke<{ fileId: string }>(trackerServer.post('/api/file', payload)),
+    getListFileMetadata: () => 
+        invoke<FileMetadata[]>(localRepoServer.get('/api/file/metadata')),
+    uploadListFileMetadata: (payload: ListFileMetadata) => 
+        invoke<number>(trackerServer.post('/api/listFiles', payload))
 };

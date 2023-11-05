@@ -5,5 +5,4 @@ export const FileDto = Type.Object({
     type: Type.String(),
     size: Type.Number()
 });
-
 export type FileDto = Static<typeof FileDto>;

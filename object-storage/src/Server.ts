@@ -11,7 +11,17 @@ export function createServer(config: ServerConfig): FastifyInstance {
         origin: true,
         credentials: true
     });
-    app.register(import('@fastify/multipart'), { attachFieldsToBody: true });
+    app.register(import('@fastify/multipart'), {
+        limits: {
+            fieldNameSize: 100,
+            fieldSize: 100,
+            fields: 10,
+            fileSize: 104857600,
+            files: 1,
+            headerPairs: 2000
+        },
+        attachFieldsToBody: true
+    });
 
     app.register(import('@fastify/swagger'), swaggerConfig);
     app.register(import('@fastify/swagger-ui'), swaggerUIConfig);

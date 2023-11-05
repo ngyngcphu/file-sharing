@@ -1,4 +1,5 @@
 import type { MultipartFile } from '@fastify/multipart';
+import { envs } from '@configs';
 import { FileDto } from '@dtos/out';
 import { Handler } from "@interfaces";
 import { logger, minio, validateMultipartFile } from "@utils";
@@ -29,8 +30,23 @@ const getURLFile: Handler<string, { Params: { fname: string } }> = async (req, r
     }
 
     try {
-        const fileURL = await minio.createPresignedGetFile(fname);
+        const fileURL = `http://${envs.MINIO_ENDPOINT}:${envs.MINIO_PORT}/${envs.MINIO_BUCKET_NAME}/${fname}`;
         return res.status(200).send(fileURL);
+    } catch (err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
+    }
+}
+
+const listMetadataFile: Handler<FileDto[]> = async (_req, res) => {
+    try {
+        const fileMetadata = await minio.listObjectMetadata();
+        const result: FileDto[] = fileMetadata.map((metadata) => ({
+            name: metadata.name,
+            type: metadata.name.split('.').pop()?.toLowerCase() ?? 'unknown',
+            size: metadata.size
+        }))
+        return result;
     } catch (err) {
         logger.error(err);
         return res.status(500).send(err.message);
@@ -39,5 +55,6 @@ const getURLFile: Handler<string, { Params: { fname: string } }> = async (req, r
 
 export const minioHandler = {
     uploadFile,
-    getURLFile
+    getURLFile,
+    listMetadataFile
 };

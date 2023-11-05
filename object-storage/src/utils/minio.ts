@@ -1,4 +1,4 @@
-import { BucketItemStat } from 'minio';
+import { BucketItem, BucketItemStat } from 'minio';
 import { minioClient } from '@repositories';
 import { envs } from '@configs';
 
@@ -76,17 +76,31 @@ const statObjectOfLocalRepo = async (fileName: string): Promise<BucketItemStat> 
     }
 }
 
-const createPresignedGetFile = async (fileName: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        minioClient.presignedGetObject(envs.MINIO_BUCKET_NAME, fileName, 24 * 60 * 60, (err, presignedUrl) => {
-            if (err) {
-                reject(new Error(`Cannot create presigned URL: ${err.message}`));
-            } else {
-                resolve(presignedUrl);
-            }
-        });
+const listObjects = (): Promise<BucketItem[]> => {
+    return new Promise<BucketItem[]>((resolve, reject) => {
+        const objectsStream = minioClient.listObjects(envs.MINIO_BUCKET_NAME, '', true);
+        const objects: BucketItem[] = [];
+
+        objectsStream.on('data', obj => objects.push(obj));
+        objectsStream.on('error', error => reject(error));
+        objectsStream.on('end', () => resolve(objects));
     });
-}
+};
+
+const listObjectMetadata = async () => {
+    try {
+        const objects = await listObjects();
+        const metadataList = [];
+        for (const object of objects) {
+            if (object.name) {
+                metadataList.push({ name: object.name, size: object.size });
+            }
+        }
+        return metadataList;
+    } catch (error) {
+        throw new Error(`Can not list objects in local repository: ${error.message}`);
+    }
+};
 
 // const isObjectExistInMinio = async (bucketName: string, objectName: string) => {
 //     try {
@@ -98,4 +112,4 @@ const createPresignedGetFile = async (fileName: string): Promise<string> => {
 //     }
 // };
 
-export const minio = { createPresignedGetFile, uploadFileToLocalRepo, statObjectOfLocalRepo };
+export const minio = { uploadFileToLocalRepo, statObjectOfLocalRepo, listObjectMetadata };

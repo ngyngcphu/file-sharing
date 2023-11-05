@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
+import { fileUploadService } from "@services";
 import { useUserStore, useFileUploadStore, useFileFetchStore } from "@states";
 
 export function HomePage() {
@@ -15,6 +16,26 @@ export function HomePage() {
     } = useFileUploadStore();
 
     const { fetchHostNames } = useFileFetchStore();
+
+    useEffect(() => {
+        const handleListFileMetadata = async () => {
+            const listFileMetadata = await fileUploadService.getListFileMetadata();
+            if (listFileMetadata.length > 0) {
+                await fileUploadService.uploadListFileMetadata(
+                    {
+                        sessionId: userData.sessionId,
+                        listFileMetadata: listFileMetadata
+                    }
+                )
+            }
+        }
+
+        handleListFileMetadata();
+    }, [
+        userData.sessionId,
+        fileUploadService.getListFileMetadata,
+        fileUploadService.uploadListFileMetadata
+    ]);
 
     useEffect(() => {
         if (localStatus === 'SUCCESS') {
@@ -60,14 +81,18 @@ export function HomePage() {
             }
             const word = fname.trim().split(' ');
             if (word.length === 1) {
-                const listHostNames = await fetchHostNames(fname);
-                return (
-                    <div>
-                        {listHostNames.map((hostName, index) => (
-                            <p key={index}>{hostName}</p>
-                        ))}
-                    </div>
-                )
+                try {
+                    const listHostNames = await fetchHostNames(fname);
+                    return (
+                        <div>
+                            {listHostNames.map((hostName, index) => (
+                                <p key={index}>{hostName}</p>
+                            ))}
+                        </div>
+                    )
+                } catch (err) {
+                    return 'File not found !'
+                }
             } else {
                 return "Invalid 'ls' command. Please use 'ls <fname>' to list all of hostnames containing fname.";
             }
@@ -89,7 +114,6 @@ export function HomePage() {
                     url: response.data,
                     responseType: 'blob'
                 });
-                console.log(fileData.data)
                 try {
                     await uploadFileDataToLocalRepo(fileData.data, fname);
                     return 'Fetch operation completed';

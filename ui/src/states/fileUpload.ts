@@ -27,5 +27,5 @@ export const useFileUploadStore = create<FileUploadStore>()((set) => ({
         } catch (err) {
             set(() => ({ serverStatus: 'REJECT' }));
         }
-    },
+    }
 }));

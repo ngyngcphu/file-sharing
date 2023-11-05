@@ -25,5 +25,15 @@ export const uploadFilePlugin = createRoutes('File', [
             }
         },
         handler: minioHandler.getURLFile
+    },
+    {
+        method: 'GET',
+        url: '/metadata',
+        schema: {
+            response: {
+                200: Type.Array(FileDto)
+            }
+        },
+        handler: minioHandler.listMetadataFile
     }
 ]);
