@@ -3,3 +3,4 @@
  */
 
 export * from './minio.handler';
+export * from './ping.handler';

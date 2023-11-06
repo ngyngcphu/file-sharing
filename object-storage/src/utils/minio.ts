@@ -1,6 +1,6 @@
 import { BucketItem, BucketItemStat } from 'minio';
-import { minioClient } from '@repositories';
 import { envs } from '@configs';
+import { minioClient } from '@repositories';
 
 const uploadFileToLocalRepo = async (fileName: string, fileBuffer: Buffer) => {
     const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
