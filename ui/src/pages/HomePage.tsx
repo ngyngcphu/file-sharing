@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
-import { fileUploadService, fileFetchService } from "@services";
+import { fileUploadService, fileFetchService, authService } from "@services";
 import { useUserStore, useFileUploadStore } from "@states";
 
 export function HomePage() {
     const [key, setKey] = useState<number>(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { userData } = useUserStore();
+    const { userData, getUserData } = useUserStore();
     const {
         localStatus,
         fileMetadata,
@@ -121,6 +121,10 @@ export function HomePage() {
             } catch (err) {
                 return 'Error saving the file';
             }
+        },
+        logout: async () => {
+            await authService.logout({ userId: userData.userId, sessionId: userData.sessionId});
+            await getUserData();
         }
     }
 

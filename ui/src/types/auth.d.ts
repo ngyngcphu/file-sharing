@@ -9,4 +9,7 @@ type LoginPayload = {
   password: string;
 };
 
-type LogoutPayload = LoginPayload;
+type LogoutPayload = {
+  userId: string;
+  sessionId: string;
+}
