@@ -35,5 +35,16 @@ export const uploadFilePlugin = createRoutes('File', [
             }
         },
         handler: minioHandler.listMetadataFile
+    },
+    {
+        method: 'DELETE',
+        url: '/:fname',
+        schema: {
+            params: { fname: Type.String() },
+            response: {
+                200: Type.String()
+            }
+        },
+        handler: minioHandler.deleteFile
     }
 ]);

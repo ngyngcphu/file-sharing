@@ -53,8 +53,24 @@ const listMetadataFile: Handler<FileDto[]> = async (_req, res) => {
     }
 }
 
+const deleteFile: Handler<string, { Params: { fname: string } }> = async (req, res) => {
+    const fname = req.params.fname;
+    const objectStat = await minio.statObjectOfLocalRepo(fname);
+    if (!objectStat) {
+        return res.badRequest('File does not exist in local repository !');
+    }
+    try {
+        await minio.removeFileFromMinio(fname);
+        return 'File is deleted successfully !';
+    } catch (err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
+    }
+}
+
 export const minioHandler = {
     uploadFile,
     getURLFile,
-    listMetadataFile
+    listMetadataFile,
+    deleteFile
 };

@@ -1,7 +1,12 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
-import { fileUploadService, fileFetchService, authService } from "@services";
+import {
+    authService,
+    fileUploadService,
+    fileFetchService,
+    fileDeleteService
+} from "@services";
 import { useUserStore, useFileUploadStore } from "@states";
 
 export function HomePage() {
@@ -36,20 +41,13 @@ export function HomePage() {
     ]);
 
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
         if (localStatus === 'SUCCESS') {
             const { sessionId } = userData;
-            timeoutId = setTimeout(() => {
-                uploadFileMetadataToServer({
-                    ...fileMetadata,
-                    sessionId
-                });
-            }, 0);
-
+            uploadFileMetadataToServer({
+                ...fileMetadata,
+                sessionId
+            });
         }
-        return () => {
-            clearTimeout(timeoutId);
-        };
     }, [fileMetadata, userData.sessionId, localStatus, uploadFileMetadataToServer]);
 
     const commands = {
@@ -78,6 +76,23 @@ export function HomePage() {
                 );
             } else {
                 return "Invalid 'publish' command. Please use 'publish <fname>' to select a file.";
+            }
+        },
+        unpublish: async (fname: string) => {
+            if (fname.trim() === '') {
+                return "Please provide <fname> after 'unpublish'"
+            }
+            const word = fname.trim().split(' ');
+            if (word.length === 1) {
+                try {
+                    await fileDeleteService.delete(fname);
+                    await fileDeleteService.markDeleted(userData.sessionId, fname);
+                    return 'File is deleted successfully !';
+                } catch (err) {
+                    return 'File not found!';
+                }
+            } else {
+                return "Invalid 'unpublish' command. Please use 'unpublish <fname>' to remove a file.";
             }
         },
         ls: async (fname: string) => {

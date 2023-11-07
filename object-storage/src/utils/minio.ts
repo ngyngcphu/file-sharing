@@ -22,49 +22,6 @@ const uploadFileToLocalRepo = async (fileName: string, fileBuffer: Buffer) => {
     }
 };
 
-// const removeFileFromMinio = async (objectName: string) => {
-//     const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
-
-//     if (!bucketExists) {
-//         throw new Error("Bucket doesn't exist");
-//     }
-
-//     try {
-//         await minioClient.removeObject(envs.MINIO_BUCKET_NAME, objectName);
-//     } catch (error) {
-//         throw new Error(`Error removing file from Minio: ${error.message}`);
-//     }
-// };
-
-// const getFileFromLocalRepo = async (fileName: string): Promise<Buffer> => {
-//     const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
-//     if (!bucketExists) {
-//         throw new Error("Bucket doesn't exist");
-//     }
-
-//     try {
-//         const dataStream = await minioClient.getObject(envs.MINIO_BUCKET_NAME, fileName);
-//         const chunks: Buffer[] = [];
-
-//         return new Promise<Buffer>((resolve, reject) => {
-//             dataStream.on('data', (chunk) => {
-//                 chunks.push(chunk);
-//             });
-
-//             dataStream.on('end', () => {
-//                 const fileBuffer = Buffer.concat(chunks);
-//                 resolve(fileBuffer);
-//             });
-
-//             dataStream.on('error', (error) => {
-//                 reject(error);
-//             });
-//         });
-//     } catch (error) {
-//         throw new Error(`Error fetching file from Local Repository: ${error.message}`);
-//     }
-// };
-
 const statObjectOfLocalRepo = async (fileName: string): Promise<BucketItemStat> => {
     const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
     if (!bucketExists) {
@@ -104,14 +61,22 @@ const listObjectMetadata = async () => {
     }
 };
 
-// const isObjectExistInMinio = async (bucketName: string, objectName: string) => {
-//     try {
-//         await minioClient.statObject(bucketName, objectName);
-//         return true;
-//     } catch (error) {
-//         console.error(error);
-//         return false;
-//     }
-// };
+const removeFileFromMinio = async (fileName: string) => {
+    const bucketExists = await minioClient.bucketExists(envs.MINIO_BUCKET_NAME);
+    if (!bucketExists) {
+        throw new Error("Bucket doesn't exist");
+    }
 
-export const minio = { uploadFileToLocalRepo, statObjectOfLocalRepo, listObjectMetadata };
+    try {
+        await minioClient.removeObject(envs.MINIO_BUCKET_NAME, fileName);
+    } catch (error) {
+        throw new Error(`Error removing file from Minio: ${error.message}`);
+    }
+};
+
+export const minio = { 
+    uploadFileToLocalRepo, 
+    statObjectOfLocalRepo, 
+    listObjectMetadata,
+    removeFileFromMinio
+};
