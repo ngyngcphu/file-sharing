@@ -22,15 +22,15 @@ const uploadFile: Handler<
     return res.status(200).send(message);
 }
 
-const getURLFile: Handler<string, { Params: { fname: string } }> = async (req, res) => {
-    const fname = req.params.fname;
+const getURLFile: Handler<string, { Params: { fname: string, hostname: string } }> = async (req, res) => {
+    const { fname, hostname } = req.params;
     const objectStat = await minio.statObjectOfLocalRepo(fname);
     if (!objectStat) {
         return res.badRequest('File does not exist in local repository !');
     }
 
     try {
-        const fileURL = `http://${envs.MINIO_ENDPOINT}:${envs.MINIO_PORT}/${envs.MINIO_BUCKET_NAME}/${fname}`;
+        const fileURL = `http://${hostname}:${envs.MINIO_PORT}/${envs.MINIO_BUCKET_NAME}/${fname}`;
         return res.status(200).send(fileURL);
     } catch (err) {
         logger.error(err);

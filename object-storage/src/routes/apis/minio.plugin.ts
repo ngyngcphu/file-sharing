@@ -17,9 +17,9 @@ export const uploadFilePlugin = createRoutes('File', [
     },
     {
         method: 'GET',
-        url: '/:fname',
+        url: '/:fname/:hostname',
         schema: {
-            params: { fname: Type.String() },
+            params: { fname: Type.String(), hostname: Type.String() },
             response: {
                 200: Type.String()
             }

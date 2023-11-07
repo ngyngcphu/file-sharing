@@ -36,14 +36,21 @@ export function HomePage() {
     ]);
 
     useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
         if (localStatus === 'SUCCESS') {
             const { sessionId } = userData;
-            uploadFileMetadataToServer({
-                ...fileMetadata,
-                sessionId
-            });
+            timeoutId = setTimeout(() => {
+                uploadFileMetadataToServer({
+                    ...fileMetadata,
+                    sessionId
+                });
+            }, 0);
+
         }
-    }, [fileMetadata, userData.sessionId, localStatus]);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [fileMetadata, userData.sessionId, localStatus, uploadFileMetadataToServer]);
 
     const commands = {
         publish: async (fname: string) => {
@@ -106,7 +113,7 @@ export function HomePage() {
                 return `Hostname '${hostname}' not found for '${fname}'.`;
             }
             try {
-                const response = await axios.get(`http://${hostname}:8080/api/file/${fname}`);
+                const response = await axios.get(`http://${hostname}:8080/api/file/${fname}/${hostname}`);
                 const fileData = await axios({
                     method: 'get',
                     url: response.data,
@@ -123,7 +130,7 @@ export function HomePage() {
             }
         },
         logout: async () => {
-            await authService.logout({ userId: userData.userId, sessionId: userData.sessionId});
+            await authService.logout({ userId: userData.userId, sessionId: userData.sessionId });
             await getUserData();
         }
     }

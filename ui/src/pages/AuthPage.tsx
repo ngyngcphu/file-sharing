@@ -9,7 +9,7 @@ import { useUserStore } from '@states';
 
 export function AuthPage() {
   const navigate: NavigateFunction = useNavigate();
-  const { getUserData, userData } = useUserStore();
+  const { getUserData } = useUserStore();
   const [isSignup, setIsSignup] = useState<boolean>(false);
 
   if (isSignup === false) {

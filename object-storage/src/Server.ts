@@ -16,7 +16,7 @@ export function createServer(config: ServerConfig): FastifyInstance {
             fieldNameSize: 100,
             fieldSize: 100,
             fields: 10,
-            fileSize: 104857600,
+            fileSize: 100 * 1024 * 1024 * 1024,
             files: 1,
             headerPairs: 2000
         },
