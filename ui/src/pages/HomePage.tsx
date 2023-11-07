@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { ReactTerminal } from "react-terminal";
+import axios from "axios";
+import moment from "moment";
 import {
     authService,
     fileUploadService,
@@ -8,6 +9,7 @@ import {
     fileDeleteService
 } from "@services";
 import { useUserStore, useFileUploadStore } from "@states";
+import { formatFileSize } from "@utils";
 
 export function HomePage() {
     const [key, setKey] = useState<number>(0);
@@ -95,9 +97,42 @@ export function HomePage() {
                 return "Invalid 'unpublish' command. Please use 'unpublish <fname>' to remove a file.";
             }
         },
-        ls: async (fname: string) => {
+        ls: async () => {
+            const listFileMetadata = await fileFetchService.listAll();
+            if (listFileMetadata.length > 0) {
+                return (
+                    <table className="w-full min-w-max table-auto text-left">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>IP Address</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Shared Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {listFileMetadata.map((file, index) => (
+                                <tr key={index}>
+                                    <th>{file.name}</th>
+                                    <th>{file.username}</th>
+                                    <th>{file.ipAddress}</th>
+                                    <th>{file.type}</th>
+                                    <th>{formatFileSize(file.size)}</th>
+                                    <th>{moment.unix(file.sharedTime).format('HH:mm, DD/MM/YYYY')}</th>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )
+            } else {
+                return 'No files available !'
+            }
+        },
+        filter: async (fname: string) => {
             if (fname.trim() === '') {
-                return "Please provide <fname> after 'ls'"
+                return "Please provide <fname> after 'filter'"
             }
             const word = fname.trim().split(' ');
             if (word.length === 1) {
@@ -114,7 +149,7 @@ export function HomePage() {
                     return 'File not found !'
                 }
             } else {
-                return "Invalid 'ls' command. Please use 'ls <fname>' to list all of hostnames containing fname.";
+                return "Invalid 'filter' command. Please use 'filter <fname>' to list all of hostnames containing fname.";
             }
         },
         fetch: async (fnameAndHostname: string) => {

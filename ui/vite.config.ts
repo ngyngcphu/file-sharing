@@ -53,6 +53,10 @@ export default defineConfig({
       {
         find: '@states',
         replacement: path.resolve(__dirname, 'src/states')
+      },
+      {
+        find: '@utils',
+        replacement: path.resolve(__dirname, 'src/utils')
       }
     ]
   }

@@ -27,7 +27,8 @@
       "@layouts": ["src/layouts"],
       "@pages": ["src/pages"],
       "@services": ["src/services"],
-      "@states": ["src/states"]
+      "@states": ["src/states"],
+      "@utils": ["src/utils"]
     }
   },
   "include": ["src", "**/*.ts", "**/*.tsx", "**/*.js", "*.cjs"],
