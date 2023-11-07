@@ -158,10 +158,15 @@ export function HomePage() {
             if (!fname || !hostname) {
                 return "Please provide both <fname> and <hostname> separated by a space after 'fetch'";
             }
-            const listHostNames = await fileFetchService.listHostName(fname);
-            if (!listHostNames.includes(hostname)) {
-                return `Hostname '${hostname}' not found for '${fname}'.`;
+            try {
+                const listHostNames = await fileFetchService.listHostName(fname);
+                if (!listHostNames.includes(hostname)) {
+                    return `Hostname '${hostname}' not found for '${fname}'.`;
+                }
+            } catch (err) {
+                return 'File not found !'
             }
+            
             try {
                 const response = await axios.get(`http://${hostname}:8080/api/file/${fname}/${hostname}`);
                 const fileData = await axios({
