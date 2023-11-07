@@ -8,12 +8,14 @@ const uploadFileToLocalRepo = async (fileName: string, fileBuffer: Buffer) => {
         throw new Error("Bucket doesn't exist");
     }
     try {
-        await minioClient.putObject(envs.MINIO_BUCKET_NAME, fileName, fileBuffer);
-        const statFile = await minioClient.statObject(envs.MINIO_BUCKET_NAME, fileName);
-        return {
-            name: fileName,
-            type: fileName.split('.').pop()?.toLowerCase(),
-            size: statFile.size
+        const object = await minioClient.putObject(envs.MINIO_BUCKET_NAME, fileName, fileBuffer);
+        if (object) {
+            const statFile = await minioClient.statObject(envs.MINIO_BUCKET_NAME, fileName);
+            return {
+                name: fileName,
+                type: fileName.split('.').pop()?.toLowerCase(),
+                size: statFile.size
+            }
         }
     } catch (error) {
         throw new Error(`Error upload file to Local Repository: ${error.message}`);
@@ -76,7 +78,7 @@ const statObjectOfLocalRepo = async (fileName: string): Promise<BucketItemStat> 
     }
 }
 
-const listObjects = (): Promise<BucketItem[]> => {
+const listObjects = async (): Promise<BucketItem[]> => {
     return new Promise<BucketItem[]>((resolve, reject) => {
         const objectsStream = minioClient.listObjects(envs.MINIO_BUCKET_NAME, '', true);
         const objects: BucketItem[] = [];
